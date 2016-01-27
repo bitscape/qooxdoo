@@ -409,13 +409,14 @@ qx.Class.define("qx.data.controller.Tree",
      * Creates a TreeFolder and delegates the configure method if a delegate is
      * set and the needed function (configureItem) is available.
      *
+     * @param model {qx.core.Object} The model of the new item
      * @return {qx.ui.tree.core.AbstractTreeItem} The created and configured TreeFolder.
      */
-    _createItem: function() {
+    _createItem: function(model) {
       var delegate = this.getDelegate();
       // check if a delegate and a create method is set
       if (delegate != null && delegate.createItem != null) {
-        var item = delegate.createItem();
+        var item = delegate.createItem(model);
       } else {
         var item = new qx.ui.tree.TreeFolder();
       }
@@ -455,7 +456,7 @@ qx.Class.define("qx.data.controller.Tree",
       // only build up a new tree if a model is given
       if (this.getModel() != null) {
         // create a new root node
-        var rootNode = this._createItem();
+        var rootNode = this._createItem(this.getModel());
         rootNode.setModel(this.getModel());
         // bind the root node
         this.__addBinding(this.getModel(), rootNode);
@@ -540,7 +541,7 @@ qx.Class.define("qx.data.controller.Tree",
           // if the node is new
           } else {
             // add the child node
-            var treeNode = this._createItem();
+            var treeNode = this._createItem(children.getItem(i));
             treeNode.setModel(children.getItem(i));
             rootNode.addAt(treeNode, i);
             this.__addBinding(children.getItem(i), treeNode);
